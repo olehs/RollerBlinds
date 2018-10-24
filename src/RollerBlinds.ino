@@ -78,6 +78,9 @@ void presentation()
 
 void receive(const MyMessage &message)
 {
+  if (message.isAck())
+    return;
+
   byte val;
   switch (message.type)
   {
@@ -339,9 +342,7 @@ void reportState()
   {
     if ((state == RollerBlind::Stopped) || (state == RollerBlind::EndstopDown) || (state == RollerBlind::EndstopUp) || ((pos % 5) == 0))
     {
-      // Serial.print("Current position: ");
-      // Serial.println(pos);
-      if (sendMsg(msg.setType(V_PERCENTAGE).set(pos)))
+      if (sendMsg(msg.setType(V_CURRENT).set(pos)))
       {
         last_position = pos;
         saveState(POS_ADDR, pos);
